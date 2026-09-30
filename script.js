@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlValue = input.value.trim();
 
     if (!urlValue) {
-      status.textContent = "Por favor ingresa un enlace válido.";
+      status.textContent = "Por favor ingresa un perfil válido.";
       status.style.color = "#ff4444";
       return;
     }
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (response.ok) {
-        status.textContent = "¡Enviado con éxito!";
+        status.textContent = "Espera unos minutos";
         status.style.color = "#44ff44";
         input.value = ""; // Limpia el cuadro de texto
       } else {
