@@ -109,11 +109,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (intervalo) clearInterval(intervalo);
     localStorage.removeItem('timerEndTime');
     
-    status.textContent = "Solicitud cancelada.";
+    status.textContent = "Solicitud cancelada.";[cite: 8]
     status.style.color = "#ff4444";
     
     input.disabled = false;
     submitBtn.disabled = false;
     cancelBtn.classList.add('hidden');
+
+    setTimeout(() => {
+      if (status.textContent === "Solicitud cancelada.") {[cite: 8]
+        status.textContent = "";
+      }
+    }, 3000);
   }
 });
