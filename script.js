@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('profile-url');
   const status = document.getElementById('form-status');
   const submitBtn = form.querySelector('button[type="submit"]');
+  const cancelBtn = document.getElementById('cancel-btn');
 
   const SERVER_URL = "https://backend-hermanos-gang.onrender.com/api/join";
   const DOS_HORAS_EN_MS = 2 * 60 * 60 * 1000;
+  let intervalo = null;
 
   comprobarTemporizadorExistente();
 
@@ -52,6 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  cancelBtn.addEventListener('click', () => {
+    cancelarSolicitud();
+  });
+
   function comprobarTemporizadorExistente() {
     const tiempoFinGuardado = localStorage.getItem('timerEndTime');
     if (tiempoFinGuardado) {
@@ -67,9 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function iniciarTemporizador(tiempoFin) {
     input.disabled = true;
     submitBtn.disabled = true;
+    cancelBtn.classList.remove('hidden');
     status.style.color = "#44ff44";
 
-    const intervalo = setInterval(() => {
+    if (intervalo) clearInterval(intervalo);
+
+    intervalo = setInterval(() => {
       const ahora = Date.now();
       const milisegundosRestantes = tiempoFin - ahora;
 
@@ -79,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         status.textContent = "¡Proceso completado!";
         input.disabled = false;
         submitBtn.disabled = false;
+        cancelBtn.classList.add('hidden');
         return;
       }
 
@@ -93,5 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       status.textContent = `Procesando... Tiempo restante: ${hStr}:${mStr}:${sStr}`;
     }, 1000);
+  }
+
+  function cancelarSolicitud() {
+    if (intervalo) clearInterval(intervalo);
+    localStorage.removeItem('timerEndTime');
+    
+    status.textContent = "Solicitud cancelada.";
+    status.style.color = "#ff4444";
+    
+    input.disabled = false;
+    submitBtn.disabled = false;
+    cancelBtn.classList.add('hidden');
   }
 });
