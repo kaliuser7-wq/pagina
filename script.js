@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = form.querySelector('button[type="submit"]');
 
   const SERVER_URL = "https://backend-hermanos-gang.onrender.com/api/join";
+  const DOS_HORAS_EN_MS = 2 * 60 * 60 * 1000;
+
+  comprobarTemporizadorExistente();
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -18,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     status.textContent = "Enviando datos...";
     status.style.color = "#a1a1aa";
-    submitBtn.disabled = true; // Deshabilita el botón mientras envía
+    submitBtn.disabled = true;
 
     try {
       const response = await fetch(SERVER_URL, {
@@ -30,9 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (response.ok) {
-        input.value = ""; // Limpia el cuadro de texto
-        input.disabled = true; // Deshabilita el cuadro de texto
-        iniciarTemporizador(2 * 60 * 60); // Inicia el temporizador de 2 horas (en segundos)
+        input.value = "";
+        
+        const tiempoFin = Date.now() + DOS_HORAS_EN_MS;
+        localStorage.setItem('timerEndTime', tiempoFin.toString());
+
+        iniciarTemporizador(tiempoFin);
       } else {
         status.textContent = "Error al enviar. Inténtalo de nuevo.";
         status.style.color = "#ff4444";
@@ -46,31 +52,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Función para manejar la cuenta regresiva de 2 horas
-  function iniciarTemporizador(duracionSegundos) {
-    let tiempoRestante = duracionSegundos;
+  function comprobarTemporizadorExistente() {
+    const tiempoFinGuardado = localStorage.getItem('timerEndTime');
+    if (tiempoFinGuardado) {
+      const tiempoFin = parseInt(tiempoFinGuardado, 10);
+      if (Date.now() < tiempoFin) {
+        iniciarTemporizador(tiempoFin);
+      } else {
+        localStorage.removeItem('timerEndTime');
+      }
+    }
+  }
+
+  function iniciarTemporizador(tiempoFin) {
+    input.disabled = true;
+    submitBtn.disabled = true;
     status.style.color = "#44ff44";
 
     const intervalo = setInterval(() => {
-      const horas = Math.floor(tiempoRestante / 3600);
-      const minutos = Math.floor((tiempoRestante % 3600) / 60);
-      const segundos = tiempoRestante % 60;
+      const ahora = Date.now();
+      const milisegundosRestantes = tiempoFin - ahora;
 
-      // Formatear a dos dígitos (ej: 02:00:00)
+      if (milisegundosRestantes <= 0) {
+        clearInterval(intervalo);
+        localStorage.removeItem('timerEndTime');
+        status.textContent = "¡Proceso completado!";
+        input.disabled = false;
+        submitBtn.disabled = false;
+        return;
+      }
+
+      const totalSegundos = Math.floor(milisegundosRestantes / 1000);
+      const horas = Math.floor(totalSegundos / 3600);
+      const minutos = Math.floor((totalSegundos % 3600) / 60);
+      const segundos = totalSegundos % 60;
+
       const hStr = String(horas).padStart(2, '0');
       const mStr = String(minutos).padStart(2, '0');
       const sStr = String(segundos).padStart(2, '0');
 
       status.textContent = `Procesando... Tiempo restante: ${hStr}:${mStr}:${sStr}`;
-
-      if (tiempoRestante <= 0) {
-        clearInterval(intervalo);
-        status.textContent = "¡Proceso completado!";
-        input.disabled = false;
-        submitBtn.disabled = false;
-      }
-
-      tiempoRestante--;
     }, 1000);
   }
 });
