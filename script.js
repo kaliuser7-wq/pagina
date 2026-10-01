@@ -54,9 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  cancelBtn.addEventListener('click', () => {
-    cancelarSolicitud();
-  });
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      cancelarSolicitud();
+    });
+  }
 
   function comprobarTemporizadorExistente() {
     const tiempoFinGuardado = localStorage.getItem('timerEndTime');
@@ -73,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function iniciarTemporizador(tiempoFin) {
     input.disabled = true;
     submitBtn.disabled = true;
-    cancelBtn.classList.remove('hidden');
+    if (cancelBtn) cancelBtn.classList.remove('hidden');
     status.style.color = "#44ff44";
 
     if (intervalo) clearInterval(intervalo);
@@ -88,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         status.textContent = "¡Proceso completado!";
         input.disabled = false;
         submitBtn.disabled = false;
-        cancelBtn.classList.add('hidden');
+        if (cancelBtn) cancelBtn.classList.add('hidden');
         return;
       }
 
@@ -114,6 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     input.disabled = false;
     submitBtn.disabled = false;
-    cancelBtn.classList.add('hidden');
+    if (cancelBtn) cancelBtn.classList.add('hidden');
+
+    setTimeout(() => {
+      if (status.textContent === "Solicitud cancelada.") {
+        status.textContent = "";
+      }
+    }, 3000);
   }
 });
