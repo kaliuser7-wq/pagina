@@ -174,3 +174,23 @@ body.dark-theme {
     text-align: center;
   }
 }
+.hidden {
+  display: none !important;
+}
+
+.btn-cancel {
+  margin-top: 15px;
+  background: transparent;
+  color: #ff4444;
+  border: 1px solid #ff4444;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: rgba(255, 68, 68, 0.1);
+}
