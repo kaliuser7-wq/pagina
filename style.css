@@ -194,3 +194,42 @@ body.dark-theme {
 .btn-cancel:hover {
   background-color: rgba(255, 68, 68, 0.1);
 }
+.tutorial-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 25px;
+  text-align: left;
+}
+
+.tutorial-card h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.tutorial-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000;
+  border: 1px solid var(--border-color);
+}
+
+.video-wrapper video,
+.video-wrapper iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
+  border: none;
+}
